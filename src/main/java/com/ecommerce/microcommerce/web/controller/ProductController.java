@@ -16,6 +16,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -61,8 +64,27 @@ public class ProductController {
         return produit;
     }
 
+    //Calcul la marge d'un produit
+    @ApiOperation(value = "Calcul les marge des produit en stock!")
+    @GetMapping(value = "/AdminProduits")
+    public HashMap calculerMargeProduit() {
+
+        Iterable<Product> produits = productDao.findAll();
+
+        // List <String> listPrixAchat = new ArrayList<>();
+        System.out.println("1");
+        Iterator<Product> e = produits.iterator();
+        HashMap listPrixAchat = new HashMap();
 
 
+        while(e.hasNext()){
+            Product p = e.next();
+            listPrixAchat.put(p, (p.getPrix() - p.getPrixAchat()));
+
+        }
+
+        return listPrixAchat;
+    }
 
     //ajouter un produit
     @PostMapping(value = "/Produits")
@@ -86,7 +108,7 @@ public class ProductController {
     @DeleteMapping (value = "/Produits/{id}")
     public void supprimerProduit(@PathVariable int id) {
 
-        productDao.delete(id);
+        //productDao.delete(id);
     }
 
     @PutMapping (value = "/Produits")
